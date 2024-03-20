@@ -6,18 +6,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
     $e =  $_POST['email'];
     $p =  $_POST['password'];
 
-
-    //ket noi database
-    $servername = "localhost";
-    $username = "root";
-    $password ="";
-    $db = "quanlihanghoa";
-    
-    $conn = new mysqli($servername, $username, $password, $db);
-    if ($conn->connect_error)
-        {
-            die ('chua duoc ket noi: ' . $conn -> connect_error);
-        }   
+    include '../connectdb.php';
+   
     //thuc thi truy van
     $query = "SELECT *FROM Account WHERE email ='$e' AND pass ='$p' ";
 
@@ -25,13 +15,14 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
 
     if($result->num_rows == 1){
         //thanh cong
-        header("Location: ../index/index.html");
+        header("Location: ../index/index.php");
         exit();
     }
     else{
         //that bai
-        header("Location: login.html");
+        header("Location: login.php");
         exit();
     }
 
 }
+?>

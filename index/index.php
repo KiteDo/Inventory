@@ -19,33 +19,27 @@
         </header>
 
         <div class="menu">
-            <div class="item"><a href="index.html"><i class="fa-solid fa-house"></i>Trang chủ</a></div>
-            <div class="item">
-                <a href="khach-hang.html">
-                    <i class="fa-solid fa-user"></i>Khách hàng
-                </a>
-            </div>
-
+            <div class="item"><a href="index.php"><i class="fa-solid fa-house"></i>Trang chủ</a></div>
             <div class="item">
                 <a class="sub-btn">
                     <i class="fa-brands fa-dropbox"></i>Quản lý hàng hóa
                     <i class="fas fa-angle-right dropdown"></i>
                 </a>
                 <div class="sub-menu">
-                    <a href="quan-ly-nhap.html" class="sub-item">Quản lý nhập</a>
-                    <a href="quan-ly-xuat.html" class="sub-item">Quản lý xuất</a>
-                    <a href="quan-ly-ton.html" class="sub-item">Quản lý tồn</a>
+                    <a href="inventory_in.php" class="sub-item">Quản lý nhập</a>
+                    <a href="inventory_out.php" class="sub-item">Quản lý xuất</a>
+                    <a href="inventory.php" class="sub-item">Quản lý tồn</a>
                 </div>
             </div>
 
             <div class="item">
-                <a href="quan-ly-doanh-thu.html">
-                    <i class="fa-solid fa-money-bill"></i>Quản lý doanh thu
+                <a href="bill.php">
+                    <i class="fa-solid fa-money-bill"></i>Quản lý hóa đơn
                 </a>
             </div>
 
             <div class="item">
-                <a href="bao-cao.html"><i class="fa-solid fa-message"></i>Báo cáo
+                <a href="report.php"><i class="fa-solid fa-message"></i>Báo cáo
                 </a>
             </div>
         </div>
@@ -57,7 +51,6 @@
             <div class="toggle">
                 <i class="fa-solid fa-border-all"></i>
             </div>
-            <!---Tim`-->
             <!--Nguoi Dung-->
             <div class="user">
                 <img src="user.png" alt="">
@@ -93,26 +86,32 @@
         <div class="details">
             <div class="recentOrders">
                 <div class="cardHeader">
-                    <h2>Recent Orders</h2>
-                    <a href="#" class="btn">View All</a>
+                    <h2>Hàng</h2>
                 </div>
                 <table>
-                    <thead>
-                        <tr>
-                            <td>Name</td>
-                            <td>Price</td>
-                            <td>Payment</td>
-                            <td>Status</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Star Refrigerator</td>
-                            <td>12.000</td>
-                            <td>Paid</td>
-                            <td><span class="status delivered">Delivered</span></td>
-                        </tr>
-                    </tbody>
+                <?php
+                    include '../connectdb.php';
+                    $sql = "SELECT * FROM inventory"; // Thay ten_bang bằng tên bảng bạn muốn hiển thị
+                
+                    $result = mysqli_query($conn, $sql);
+                
+                    // Kiểm tra và hiển thị dữ liệu
+                    if (mysqli_num_rows($result) > 0) {
+                        echo "<thead align = left>";
+                        echo "<tr><th>Mã Hàng</th><th>Tên Hàng</th><th>Đơn Vị</th><th>Giá</th><th>Công Ty</th></tr>";
+                
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            echo "<tr><td>".$row["id_product"]."</td><td>".$row["product_name"]."</td><td>".$row["unit"]."</td><td>".$row["price"]."</td><td>".$row["company"]."</td></tr>";
+                        }
+                
+                        echo "</thead>";
+                    } else {
+                        echo "Không có dữ liệu để hiển thị.";
+                    }
+                
+                    // Đóng kết nối đến MySQL
+                    mysqli_close($conn);
+                ?>
                 </table>
             </div>
         </div>
@@ -143,5 +142,4 @@
         }
     </script>
 </body>
-
 </html>
