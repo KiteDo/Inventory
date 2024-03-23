@@ -7,6 +7,8 @@
     <title>Quản lí hàng hóa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+
 </head>
 
 <body>
@@ -42,6 +44,11 @@
                 <a href="report.php"><i class="fa-solid fa-message"></i>Báo cáo
                 </a>
             </div>
+            <div class="item">
+                <a href="../login/login.html">
+                    <i class="fa-solid fa-money-bill"></i>Đăng xuất
+                </a>
+            </div>
         </div>
     </div>
 
@@ -74,44 +81,51 @@
             <div class="card">
                 <div>
                     <div class="number"></div>
-                    <div class="cardName">Biểu đồ</div>
+                    <a href="chart.php" class="cardName">Biểu đồ</a>
                 </div>
                 <div class="iconBx">
                     <ion-icon name="bar-chart-outline"></ion-icon>
                 </div>
             </div>
-
         </div>
+        
         <!--details-->
         <div class="details">
             <div class="recentOrders">
                 <div class="cardHeader">
-                    <h2>Hàng</h2>
+                    <h2>Hàng Hóa</h2>
                 </div>
                 <table>
-                <?php
+                    <a href="add_invent.html">Thêm sản phẩm mới </a>
+                    <tr>
+                        <thead >
+                        <th>Mã Hàng</th>
+                        <th>Tên Hàng</th>
+                        <th>Đơn Vị</th>
+                        <th>Giá</th>
+                        <th>Công Ty</th>
+                        </thead>
+                    </tr>
+                    <?php
                     include '../connectdb.php';
-                    $sql = "SELECT * FROM inventory"; // Thay ten_bang bằng tên bảng bạn muốn hiển thị
+                    $sql = "SELECT * FROM inventory "; // Thay ten_bang bằng tên bảng bạn muốn hiển thị
                 
                     $result = mysqli_query($conn, $sql);
                 
                     // Kiểm tra và hiển thị dữ liệu
-                    if (mysqli_num_rows($result) > 0) {
-                        echo "<thead align = left>";
-                        echo "<tr><th>Mã Hàng</th><th>Tên Hàng</th><th>Đơn Vị</th><th>Giá</th><th>Công Ty</th></tr>";
-                
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            echo "<tr><td>".$row["id_product"]."</td><td>".$row["product_name"]."</td><td>".$row["unit"]."</td><td>".$row["price"]."</td><td>".$row["company"]."</td></tr>";
-                        }
-                
-                        echo "</thead>";
-                    } else {
-                        echo "Không có dữ liệu để hiển thị.";
-                    }
-                
-                    // Đóng kết nối đến MySQL
-                    mysqli_close($conn);
-                ?>
+                    while ($row = mysqli_fetch_assoc($result)) {
+                    ?>
+                        <tr>
+                            <td><?php echo $row['id_product'];?></td>
+                            <td><?php echo $row['product_name'];?></td>
+                            <td><?php echo $row['unit'];?></td>
+                            <td><?php echo $row['price'];?></td>
+                            <td><?php echo $row['company'];?></td>
+                            <td><a onclick="return confirm('bạn chắc chứ?')" href = "delete.php?sid=<?php echo $row['id_product'];?>">Xóa</a></td>
+                        </tr>
+                    <?php
+                    } 
+                    ?>
                 </table>
             </div>
         </div>
@@ -141,5 +155,46 @@
             main.classList.toggle('active');
         }
     </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script type="text/javascript"> 
+        new Morris.Line(
+            {
+                // ID of the element in which to draw the chart.
+                element: 'chart',
+                // Chart data records -- each entry in this array corresponds to a point on
+                // the chart.
+                data: [
+                    { year: '2008', value: 20 },
+                    { year: '2009', value: 10 },
+                    { year: '2010', value: 5 },
+                    { year: '2011', value: 5 },
+                    { year: '2012', value: 20 }
+                ],
+                // The name of the data record attribute that contains x-values.
+                xkey: 'year',
+                // A list of names of data record attributes that contain y-values.
+                ykeys: ['value'],
+                // Labels for the ykeys -- will be displayed when you hover over the
+                // chart.
+                labels: ['Value']
+            });
+    </script>
+    <style>
+                /* Định dạng bảng */
+                table {
+                    width: 100%; /* Chiều rộng của bảng */
+                    border-collapse: collapse; /* Gộp các đường viền của ô */
+                }
+                th, td {
+                    border: 1px solid black; /* Đường viền của ô */
+                    padding: 8px; /* Khoảng cách nội dung từ đường viền */
+                }
+                /* Thiết lập thanh cuộn bên phải */
+                .table-container {
+                    max-height: 300px; /* Chiều cao tối đa của bảng */
+                    overflow-y: auto; /* Tạo thanh cuộn khi nội dung vượt quá kích thước */
+                }
+    </style>
 </body>
 </html>

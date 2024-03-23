@@ -56,28 +56,37 @@
         <div class="details">
             <div class="recentOrders">
                 <div class="cardHeader">
-                    <h2>Bill</h2>
+                    <h2>Hóa Đơn</h2>
                 </div>
                 <table>
-                <?php
+                    <a href="add_bill.html">Thêm hóa đơn </a>
+                    <tr>
+                        <thead >
+                        <th>Mã Hóa Đơn</th>
+                        <th>Thời gian</th>
+                        <th>Giá</th>
+                        <th>Hình thức thanh toán</th>
+                        </thead>
+                    </tr>
+                    <?php
                     include '../connectdb.php';
-                    $sql = "SELECT * FROM bill";     
+                    $sql = "SELECT * FROM bill "; // Thay ten_bang bằng tên bảng bạn muốn hiển thị
+                
                     $result = mysqli_query($conn, $sql);
+                
                     // Kiểm tra và hiển thị dữ liệu
-                    if (mysqli_num_rows($result) > 0) {
-                        echo "<thead align = left >";
-                        echo "<tr><th>Mã Hóa Đơn</th><th>Thời gian </th><th>Giá</th><th>Hình thức thanh toán</th></tr>";
-                    while ($row = mysqli_fetch_assoc($result)) 
-                    {
-                        echo "<tr><td>".$row["id_bill"]."</td><td>".$row["time_out"]."</td><td>".$row["price"]."</td><td>".$row["payment"]."</td></tr>";                            
-                    }
-                        echo "</thead>";
-                    } else {
-                        echo "Không có dữ liệu để hiển thị.";
-                    }
-                    // Đóng kết nối đến MySQL
-                    mysqli_close($conn);
-                ?>
+                    while ($row = mysqli_fetch_assoc($result)) {
+                    ?>
+                        <tr>
+                            <td><?php echo $row['id_bill'];?></td>
+                            <td><?php echo $row['time_out'];?></td>
+                            <td><?php echo $row['price'];?></td>
+                            <td><?php echo $row['payment'];?></td>
+                            <td><a onclick="return confirm('bạn chắc chứ?')" href = "delete_bill.php?sid=<?php echo $row['id_bill'];?>">Xóa</a></td>
+                        </tr>
+                    <?php
+                    } 
+                    ?>
                 </table>
             </div>
         </div>
@@ -105,5 +114,21 @@
                 main.classList.toggle('active');
             }
         </script>
+        <style>
+                /* Định dạng bảng */
+                table {
+                    width: 100%; /* Chiều rộng của bảng */
+                    border-collapse: collapse; /* Gộp các đường viền của ô */
+                }
+                th, td {
+                    border: 1px solid black; /* Đường viền của ô */
+                    padding: 8px; /* Khoảng cách nội dung từ đường viền */
+                }
+                /* Thiết lập thanh cuộn bên phải */
+                .table-container {
+                    max-height: 300px; /* Chiều cao tối đa của bảng */
+                    overflow-y: auto; /* Tạo thanh cuộn khi nội dung vượt quá kích thước */
+                }
+        </style>
 </body>
 </html>

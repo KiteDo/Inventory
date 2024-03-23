@@ -53,6 +53,46 @@
             </div>
         </div>
 
+       <!--details-->
+       <div class="details">
+            <div class="recentOrders">
+                <div class="cardHeader">
+                    <h2>Hàng Tồn</h2>
+                </div>
+                <table>
+                    <a href="add_invent_remain.html">Thêm sản phẩm mới </a>
+                    <tr>
+                        <thead >
+                        <th>Mã Hàng</th>
+                        <th>Tên Hàng</th>
+                        <th>Số Lượng</th>
+                        <th>Ngày Nhập</th>
+                        <th>Ngày Kiểm</th>
+                        </thead>
+                    </tr>
+                    <?php
+                    include '../connectdb.php';
+                    $sql = "SELECT inventory_remain.id, inventory.id_product, inventory.product_name, inventory_remain.quantity, inventory_remain.date_in, inventory_remain.date_check FROM inventory_remain INNER JOIN inventory ON inventory.id_product = inventory_remain .id_product  "; // Thay ten_bang bằng tên bảng bạn muốn hiển thị
+                
+                    $result = mysqli_query($conn, $sql);
+                
+                    // Kiểm tra và hiển thị dữ liệu
+                    while ($row = mysqli_fetch_assoc($result)) {
+                    ?>
+                        <tr>
+                            <td><?php echo $row['id_product'];?></td>
+                            <td><?php echo $row['product_name'];?></td>
+                            <td><?php echo $row['quantity'];?></td>
+                            <td><?php echo $row['date_in'];?></td>
+                            <td><?php echo $row['date_check'];?></td>
+                            <td><a onclick="return confirm('bạn chắc chứ?')" href = "delete_invent_remain.php?sid=<?php echo $row['id'];?>">Xóa</a></td>
+                        </tr>
+                    <?php
+                    } 
+                    ?>
+                </table>
+            </div>
+        </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
@@ -78,6 +118,22 @@
                 main.classList.toggle('active');
             }
         </script>
+        <style>
+                /* Định dạng bảng */
+                table {
+                    width: 100%; /* Chiều rộng của bảng */
+                    border-collapse: collapse; /* Gộp các đường viền của ô */
+                }
+                th, td {
+                    border: 1px solid black; /* Đường viền của ô */
+                    padding: 8px; /* Khoảng cách nội dung từ đường viền */
+                }
+                /* Thiết lập thanh cuộn bên phải */
+                .table-container {
+                    max-height: 300px; /* Chiều cao tối đa của bảng */
+                    overflow-y: auto; /* Tạo thanh cuộn khi nội dung vượt quá kích thước */
+                }
+        </style>
 </body>
 
 </html>

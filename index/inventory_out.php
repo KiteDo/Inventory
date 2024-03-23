@@ -52,33 +52,45 @@
                 <img src="user.png" alt="">
             </div>
         </div>
+        <!--details-->
         <div class="details">
             <div class="recentOrders">
                 <div class="cardHeader">
-                    <h2>Hàng Xuất</h2>
+                    <h2>Hàng Đã Xuất</h2>
                 </div>
                 <table>
-                <?php
+                    <a href="add_invent_out.html">Thêm sản phẩm mới </a>
+                    <tr>
+                        <thead >
+                        <th>Mã Hàng</th>
+                        <th>Tên Hàng</th>
+                        <th>Đơn Vị</th>
+                        <th>Giá</th>
+                        <th>Công Ty</th>
+                        </thead>
+                    </tr>
+                    <?php
                     include '../connectdb.php';
-                    $sql =  "SELECT inventory.id_product, inventory.product_name, inventory_out.quantity, inventory_out.date FROM inventory_out INNER JOIN inventory ON inventory_out.id_product = inventory.id_product";
+                    $sql = "SELECT  inventory_out.id, inventory.id_product, inventory.product_name, inventory_out.quantity,  inventory_out.date FROM inventory_out INNER JOIN inventory ON inventory.id_product = inventory_out .id_product  "; // Thay ten_bang bằng tên bảng bạn muốn hiển thị
+                
                     $result = mysqli_query($conn, $sql);
+                
                     // Kiểm tra và hiển thị dữ liệu
-                    if (mysqli_num_rows($result) > 0) {
-                        echo "<thead align = left >";
-                        echo "<tr><th>Mã Sản Phẩm</th><th>Tên Sản Phẩm </th><th>Số Lượng</th><th>Ngày Xuất</th></tr>";
-                    while ($row = mysqli_fetch_assoc($result)) 
-                    {
-                        echo "<tr><td>".$row["id_product"]."</td><td>".$row["product_name"]."</td><td>".$row["quantity"]."</td><td>".$row["date"]."</td></tr>";                            
-                    }
-                        echo "</thead>";
-                    } else {
-                        echo "Không có dữ liệu để hiển thị.";
-                    }
-                    // Đóng kết nối đến MySQL
-                    mysqli_close($conn);
-                ?>
+                    while ($row = mysqli_fetch_assoc($result)) {
+                    ?>
+                        <tr>
+                            <td><?php echo $row['id_product'];?></td>
+                            <td><?php echo $row['product_name'];?></td>
+                            <td><?php echo $row['quantity'];?></td>
+                            <td><?php echo $row['date'];?></td>
+                            <td><a onclick="return confirm('bạn chắc chứ?')" href = "delete_invent_out.php?sid=<?php echo $row['id'];?>">Xóa</a></td>
+                        </tr>
+                    <?php
+                    } 
+                    ?>
                 </table>
             </div>
+        </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
@@ -104,6 +116,22 @@
                 main.classList.toggle('active');
             }
         </script>
+        <style>
+                /* Định dạng bảng */
+                table {
+                    width: 100%; /* Chiều rộng của bảng */
+                    border-collapse: collapse; /* Gộp các đường viền của ô */
+                }
+                th, td {
+                    border: 1px solid black; /* Đường viền của ô */
+                    padding: 8px; /* Khoảng cách nội dung từ đường viền */
+                }
+                /* Thiết lập thanh cuộn bên phải */
+                .table-container {
+                    max-height: 300px; /* Chiều cao tối đa của bảng */
+                    overflow-y: auto; /* Tạo thanh cuộn khi nội dung vượt quá kích thước */
+                }
+        </style>
 </body>
 
 </html>
