@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
 
     include '../connectdb.php';
    // Câu lệnh SQL để thêm sản phẩm mới
-    $query = "INSERT INTO bill (id_bill, payment, price, time_in, time_out) VALUES ('$id_bill', '$payment', '$price', '$time_in', '$time_out')";
+    $query = "INSERT IGNORE INTO bill (id_bill, payment, price, time_in, time_out) VALUES ('$id_bill', '$payment', '$price', '$time_in', '$time_out')";
     $result = $conn->query($query);
 
     if (mysqli_query($conn, $query)) {

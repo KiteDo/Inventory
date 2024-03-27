@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
 
     include '../connectdb.php';
    // Câu lệnh SQL để thêm sản phẩm mới
-    $query = "INSERT INTO inventory (id_product, product_name, unit, price, company ) VALUES ('$id_product', $product_name,  $unit,$price, $company)";
+    $query = "INSERT IGNORE INTO inventory (id_product, product_name, unit, price, company) VALUES ('$id_product', ' $product_name', '$unit', '$price', '$company') ";
     $result = $conn->query($query);
 
     if (mysqli_query($conn, $query)) {

@@ -39,6 +39,10 @@
             <div class="item">
                 <a href="report.php"><i class="fa-solid fa-message"></i>Báo cáo
                 </a>
+            </div><div class="item">
+                <a href="../login/login.html">
+                    <i class="fa-solid fa-money-bill"></i>Đăng xuất
+                </a>
             </div>
         </div>
     </div>

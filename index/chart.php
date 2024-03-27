@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lí hàng hóa</title>
+    <title>Doanh số theo ngày</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
     <link rel="stylesheet" href="style.css">
@@ -12,6 +12,8 @@
 </head>
 
 <body>
+<div class="tit"><H1>DOANH SỐ THEO NGÀY</H1></div>
+    
 <div class="side-bar">
         <header>
             <a href="#">
@@ -51,14 +53,46 @@
         </div>
 </div>
     <!-- chart draw-->
-        <div class = "chart" id="chart" style="height: 500px; width: 600px;"></div>
+        <div class = "chart" id="chart" style="height: 800px; width: 700px;"></div>
+        <?php 
+            
+            include '../connectdb.php';
+            $sql = "SELECT DATE_FORMAT(time_out, '%Y-%m-%d') AS sale_day, SUM(price) AS total
+            FROM bill
+            GROUP BY sale_day";
+            $result = $conn->query($sql);
+    
+            // Chuyển đổi dữ liệu thành định dạng JSON
+            $data = array();
+            while ($row = $result->fetch_assoc()) {
+                $data[] = array("date" => $row["sale_day"], "price" => $row["total"]);
+            }
+            
+            // Đóng kết nối
+            $conn->close();
+            
+            // Chuyển đổi thành JSON
+            $json_data = json_encode($data);
+        ?>
         <style>.chart
         {
-            text-align: center;
-            margin: 0 auto;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
         } 
+        .tit h1{
+            position: absolute; 
+            top: 5%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            text-align: center; 
+        }
         </style>
         
+
+
+   
 
 
 
@@ -89,28 +123,31 @@
             main.classList.toggle('active');
         }
     </script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+        
     <script type="text/javascript"> 
+        var jsonData = <?php echo $json_data; ?>;
         new Morris.Bar(
             {
                 // ID of the element in which to draw the chart.
                 element: 'chart',
                 // Chart data records -- each entry in this array corresponds to a point on                    // the chart.
-                data: [
-                    { year: '2008', value: 20 },
-                    { year: '2009', value: 10 },
-                    { year: '2010', value: 5 },
-                    { year: '2011', value: 5 },
-                    { year: '2012', value: 20 }
-                ],
+                data: jsonData,
                 // The name of the data record attribute that contains x-values.
-                xkey: 'year',
+                xkey: 'date',
                 // A list of names of data record attributes that contain y-values.
-                ykeys: ['value'],
+                ykeys: ['price'],
                 // Labels for the ykeys -- will be displayed when you hover over the
                 // chart.
-                labels: ['Value']
+                labels: ['price'],
+                hideHover:'auto',
+                parseTime: false, // Không phân tích dữ liệu thời gian (đã được chuyển đổi thành ngày)
+                title: 'DOANH SỐ THE NGÀY', // Đặt tên cho biểu đồ
+                barColors: ['#3C8DBC'], // Màu của cột trong biểu đồ
+                resize: true, // Tự động điều chỉnh kích thước biểu đồ khi cửa sổ trình duyệt thay đổi kích thước
             });
     </script>
 </body>
